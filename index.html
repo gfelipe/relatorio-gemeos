@@ -106,11 +106,13 @@
 <div class="overlay" id="imageOverlay">
     <div class="overlay-content">
         <button class="close-btn" onclick="closeOverlay()">&times;</button>
-        <div class="spinner" id="imageSpinner"></div>
+        <div class="spinner-container" id="spinnerContainer">
+            <div class="spinner" id="imageSpinner"></div>
+        </div>
         <img id="overlayImage" class="overlay-image" src="" alt="Galeria de fotos">
         <div class="gallery-controls">
             <button class="nav-btn" id="prevBtn" onclick="navigateImage(-1)">&#10094;</button>
-            <span class="image-counter" id="imageCounter">1 / 3</span>
+            <span class="image-counter" id="imageCounter">0 / 0</span>
             <button class="nav-btn" id="nextBtn" onclick="navigateImage(1)">&#10095;</button>
         </div>
     </div>

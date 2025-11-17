@@ -57,7 +57,8 @@ function navigateImage(direction) {
 function updateImage() {
     beforeImageUpdate();
     const img = document.getElementById('overlayImage');
-    const spinner = document.getElementById('imageSpinner');
+    img.src = ''; // Clear current image
+    const spinner = document.getElementById('spinnerContainer');
     const newSrc = currentImages[currentImageIndex];
 
     // If image is preloaded, show it immediately
@@ -83,13 +84,13 @@ function updateImage() {
 }
 
 function beforeImageUpdate() {
+    // Update counter
+    document.getElementById('imageCounter').textContent = `${currentImageIndex + 1} / ${currentImages.length}`;
+
     document.getElementById('prevBtn').disabled = true;
     document.getElementById('nextBtn').disabled = true;
 }
 function afterImageUpdate() {
-    // Update counter
-    document.getElementById('imageCounter').textContent = `${currentImageIndex + 1} / ${currentImages.length}`;
-
     // Update navigation buttons
     document.getElementById('prevBtn').disabled = false;
     document.getElementById('nextBtn').disabled = false;
