@@ -84,11 +84,38 @@
         .section:nth-child(2),
         .section:nth-child(3) {
             cursor: pointer;
+            position: relative;
         }
 
         .section:hover {
             transform: translateY(-5px);
             box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .image-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: linear-gradient(135deg, #E8B4B8, #C67882);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s;
+        }
+
+        .section:hover .image-badge {
+            transform: scale(1.1);
+        }
+
+        .camera-icon {
+            width: 18px;
+            height: 18px;
         }
 
         .icon-container {
@@ -294,6 +321,13 @@
         </div>
 
         <div class="section">
+            <span class="image-badge">
+                <svg class="camera-icon" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                </svg>
+                2 fotos
+            </span>
             <div class="icon-container">
                 <svg class="icon-svg" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
                     <!-- Heart -->
@@ -310,6 +344,13 @@
         </div>
 
         <div class="section">
+            <span class="image-badge">
+                <svg class="camera-icon" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M9 2L7.17 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2h-3.17L15 2H9zm3 15c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z"/>
+                    <circle cx="12" cy="12" r="3"/>
+                </svg>
+                1 foto
+            </span>
             <div class="icon-container">
                 <img src="static/pregnant-woman-transp.png" alt="Lalá" class="icon-img">
             </div>
