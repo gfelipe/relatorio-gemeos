@@ -297,6 +297,38 @@
             color: white;
             font-size: 18px;
         }
+
+        /* Loading spinner */
+        .spinner {
+            display: none;
+            width: 50px;
+            height: 50px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-top: 5px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .spinner.active {
+            display: block;
+        }
+
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        .overlay-image.loading {
+            opacity: 0;
+        }
+
+        .overlay-image.loading + .gallery-controls {
+            margin-top: 250px;
+        }
     </style>
 </head>
 <body>
@@ -396,6 +428,7 @@
 <div class="overlay" id="imageOverlay">
     <div class="overlay-content">
         <button class="close-btn" onclick="closeOverlay()">&times;</button>
+        <div class="spinner" id="imageSpinner"></div>
         <img id="overlayImage" class="overlay-image" src="" alt="Gallery Image">
         <div class="gallery-controls">
             <button class="nav-btn" id="prevBtn" onclick="navigateImage(-1)">&#10094;</button>
@@ -417,6 +450,17 @@
 
     let currentImages = [];
     let currentImageIndex = 0;
+    let preloadedImages = {};
+
+    // Preload images after page loads
+    window.addEventListener('load', () => {
+        const allImages = [...babiesImages, ...mommyImages];
+        allImages.forEach(src => {
+            const img = new Image();
+            img.src = src;
+            preloadedImages[src] = img;
+        });
+    });
 
     // Get all sections
     const sections = document.querySelectorAll('.section');
@@ -453,8 +497,29 @@
 
     function updateImage() {
         const img = document.getElementById('overlayImage');
-        img.src = currentImages[currentImageIndex];
+        const spinner = document.getElementById('imageSpinner');
+        const newSrc = currentImages[currentImageIndex];
+
+        // Show spinner and hide image
+        spinner.classList.add('active');
+        img.classList.add('loading');
+
+        // Update counter
         document.getElementById('imageCounter').textContent = `${currentImageIndex + 1} / ${currentImages.length}`;
+
+        // If image is preloaded, show it immediately
+        if (preloadedImages[newSrc] && preloadedImages[newSrc].complete) {
+            img.src = newSrc;
+            spinner.classList.remove('active');
+            img.classList.remove('loading');
+        } else {
+            // Load image with spinner
+            img.onload = function() {
+                spinner.classList.remove('active');
+                img.classList.remove('loading');
+            };
+            img.src = newSrc;
+        }
 
         // Update navigation buttons
         document.getElementById('prevBtn').disabled = false;
