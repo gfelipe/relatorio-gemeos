@@ -200,6 +200,32 @@ h1 {
         font-size: 0.9em;
         letter-spacing: 2px;
     }
+
+    .overlay-content {
+        max-width: 95%;
+        max-height: 85%;
+    }
+
+    .overlay-image {
+        max-height: 70vh;
+    }
+
+    .close-btn {
+        top: -35px;
+        font-size: 35px;
+    }
+
+    .nav-btn {
+        padding: 8px 15px;
+        font-size: 20px;
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .spinner {
+        width: 40px;
+        height: 40px;
+        border-width: 4px;
+    }
 }
 
 /* Overlay styles */
@@ -214,6 +240,8 @@ h1 {
     z-index: 1000;
     justify-content: center;
     align-items: center;
+    -webkit-overflow-scrolling: touch;
+    touch-action: manipulation;
 }
 
 .overlay.active {
@@ -227,6 +255,8 @@ h1 {
     display: flex;
     flex-direction: column;
     align-items: center;
+    min-height: 200px;
+    min-width: 200px;
 }
 
 .overlay-image {
@@ -234,6 +264,10 @@ h1 {
     max-height: 80vh;
     object-fit: contain;
     border-radius: 10px;
+    will-change: opacity;
+    transform: translateZ(0);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
 }
 
 .close-btn {
@@ -291,10 +325,17 @@ h1 {
 /* Loading spinner */
 .spinner-container {
     display: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
 }
 
 .spinner-container.active {
-    display: block;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .spinner {
@@ -304,17 +345,20 @@ h1 {
     border-top: 5px solid white;
     border-radius: 50%;
     animation: spin 1s linear infinite;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    will-change: transform;
+    transform: translateZ(0);
 }
 
 @keyframes spin {
-    0% { transform: translate(-50%, -50%) rotate(0deg); }
-    100% { transform: translate(-50%, -50%) rotate(360deg); }
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.overlay-image {
+    transition: opacity 0.3s ease;
 }
 
 .overlay-image.loading {
     opacity: 0;
+    visibility: hidden;
 }
