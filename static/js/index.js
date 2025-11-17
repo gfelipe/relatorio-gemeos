@@ -37,8 +37,8 @@ sections[2].addEventListener('click', () => {
 function openOverlay(imageArray, index) {
     currentImages = imageArray;
     currentImageIndex = index;
-    updateImage();
     document.getElementById('imageOverlay').classList.add('active');
+    updateImage();
     document.body.style.overflow = 'hidden'; // Prevent scrolling
 }
 
@@ -55,30 +55,40 @@ function navigateImage(direction) {
 }
 
 function updateImage() {
+    beforeImageUpdate();
     const img = document.getElementById('overlayImage');
     const spinner = document.getElementById('imageSpinner');
     const newSrc = currentImages[currentImageIndex];
-
-    // Show spinner and hide image
-    spinner.classList.add('active');
-    img.classList.add('loading');
-
-    // Update counter
-    document.getElementById('imageCounter').textContent = `${currentImageIndex + 1} / ${currentImages.length}`;
 
     // If image is preloaded, show it immediately
     if (preloadedImages[newSrc] && preloadedImages[newSrc].complete) {
         img.src = newSrc;
         spinner.classList.remove('active');
         img.classList.remove('loading');
-    } else {
-        // Load image with spinner
-        img.onload = function() {
-            spinner.classList.remove('active');
-            img.classList.remove('loading');
-        };
-        img.src = newSrc;
+
+        afterImageUpdate();
+        return;
     }
+
+    // Show spinner and hide image
+    spinner.classList.add('active');
+    img.classList.add('loading');
+
+    img.onload = function() {
+        spinner.classList.remove('active');
+        img.classList.remove('loading');
+        afterImageUpdate();
+    };
+    img.src = newSrc;
+}
+
+function beforeImageUpdate() {
+    document.getElementById('prevBtn').disabled = true;
+    document.getElementById('nextBtn').disabled = true;
+}
+function afterImageUpdate() {
+    // Update counter
+    document.getElementById('imageCounter').textContent = `${currentImageIndex + 1} / ${currentImages.length}`;
 
     // Update navigation buttons
     document.getElementById('prevBtn').disabled = false;
