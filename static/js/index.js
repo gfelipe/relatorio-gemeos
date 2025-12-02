@@ -1,11 +1,22 @@
-const babiesImages = [
-    'static/2025-11/babies/IMG_7874.jpg',
-    'static/2025-11/babies/IMG_7875.jpg'
-];
+const newsImages = window.newsImages;
+const babiesImages = window.babiesImages;
+const mommyImages = window.mommyImages;
+const nextStepsImages = window.nextStepsImages;
 
-const mommyImages = [
-    'static/2025-11/mommy/IMG_7880.jpg'
-];
+const images = [newsImages, babiesImages, mommyImages, nextStepsImages];
+const sections = document.querySelectorAll('.section');
+
+document.querySelectorAll('.image-badge').forEach((badge, idx) => {
+    if (images[idx].length) {
+        badge.classList.add('active');
+        badge.children[1].innerHTML = `${images[idx].length} Fotos`;
+
+        sections[idx].classList.add('has-image');
+        sections[idx].addEventListener('click', () => {
+            openOverlay(images[idx], 0);
+        });
+    }
+});
 
 let currentImages = [];
 let currentImageIndex = 0;
@@ -25,19 +36,6 @@ window.addEventListener('load', () => {
         };
         img.src = src;
     }
-});
-
-// Get all sections
-const sections = document.querySelectorAll('.section');
-
-// Add click event to 2nd section (index 1) for babies
-sections[1].addEventListener('click', () => {
-    openOverlay(babiesImages, 0);
-});
-
-// Add click event to 3rd section (index 2) for mommy
-sections[2].addEventListener('click', () => {
-    openOverlay(mommyImages, 0);
 });
 
 function openOverlay(imageArray, index) {

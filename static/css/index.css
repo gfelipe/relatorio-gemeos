@@ -83,8 +83,7 @@ h1 {
     transition: transform 0.3s ease;
 }
 
-.section:nth-child(2),
-.section:nth-child(3) {
+.section.has-image {
     cursor: pointer;
     position: relative;
 }
@@ -95,6 +94,7 @@ h1 {
 }
 
 .image-badge {
+    display: none;
     position: absolute;
     top: 15px;
     right: 15px;
@@ -104,11 +104,14 @@ h1 {
     border-radius: 20px;
     font-size: 0.9em;
     font-weight: bold;
-    display: flex;
     align-items: center;
     gap: 8px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
     transition: transform 0.2s;
+}
+
+.image-badge.active {
+    display: flex;
 }
 
 .section:hover .image-badge {
