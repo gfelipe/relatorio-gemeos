@@ -25,7 +25,7 @@ let isImageLoading = false;
 
 // Preload images after page loads
 window.addEventListener('load', () => {
-    const allImages = [...babiesImages, ...mommyImages];
+    const allImages = [...newsImages, ...babiesImages, ...mommyImages];
     for (const src of allImages) {
         const img = new Image();
         img.onload = () => {
