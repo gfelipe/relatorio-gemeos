@@ -18,6 +18,7 @@
             `${newsPrefix}/news-2.jpeg`,
             `${newsPrefix}/news-3.jpeg`,
             `${newsPrefix}/news-4.jpeg`,
+            `${newsPrefix}/news-1.mp4`,
         ];
         window.babiesImages = [
             `${babiesPrefix}/joca-1.jpeg`,
@@ -29,9 +30,6 @@
             `${mommyPrefix}/lala-3.jpeg`,
         ];
         window.nextStepsImages = [];
-        window.newsVideos = [
-            `${newsPrefix}/news-1.mp4`,
-        ];
     </script>
 </head>
 <body>
@@ -154,6 +152,7 @@
             <div class="spinner" id="imageSpinner"></div>
         </div>
         <img id="overlayImage" class="overlay-image" src="" alt="Galeria de fotos">
+        <video id="overlayVideo" class="overlay-image overlay-video" controls playsinline style="display:none;"></video>
         <div class="gallery-controls">
             <button class="nav-btn" id="prevBtn" onclick="navigateImage(-1)">&#10094;</button>
             <span class="image-counter" id="imageCounter">0 / 0</span>

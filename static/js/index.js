@@ -6,6 +6,10 @@ const nextStepsImages = window.nextStepsImages;
 const images = [newsImages, babiesImages, mommyImages, nextStepsImages];
 const sections = document.querySelectorAll('.section');
 
+function isVideo(src) {
+    return /\.(mp4|webm|ogg|mov)$/i.test(src);
+}
+
 document.querySelectorAll('.image-badge').forEach((badge, idx) => {
     if (images[idx].length) {
         badge.classList.add('active');
@@ -23,9 +27,9 @@ let currentImageIndex = 0;
 let preloadedImages = {};
 let isImageLoading = false;
 
-// Preload images after page loads
+// Preload images after page loads (skip videos)
 window.addEventListener('load', () => {
-    const allImages = [...newsImages, ...babiesImages, ...mommyImages];
+    const allImages = [...newsImages, ...babiesImages, ...mommyImages].filter(src => !isVideo(src));
     for (const src of allImages) {
         const img = new Image();
         img.onload = () => {
@@ -42,12 +46,10 @@ function openOverlay(imageArray, index) {
     currentImages = imageArray;
     currentImageIndex = index;
 
-    // Show overlay immediately
     const overlay = document.getElementById('imageOverlay');
     overlay.classList.add('active');
     document.body.style.overflow = 'hidden';
 
-    // Use requestAnimationFrame to ensure DOM is updated before loading image
     requestAnimationFrame(() => {
         requestAnimationFrame(() => {
             updateImage();
@@ -56,12 +58,16 @@ function openOverlay(imageArray, index) {
 }
 
 function closeOverlay() {
+    const video = document.getElementById('overlayVideo');
+    video.pause();
+    video.src = '';
+
     document.getElementById('imageOverlay').classList.remove('active');
-    document.body.style.overflow = ''; // Restore scrolling
+    document.body.style.overflow = '';
 }
 
 function navigateImage(direction) {
-    if (isImageLoading) return; // Prevent navigation while loading
+    if (isImageLoading) return;
 
     currentImageIndex += direction;
     if (currentImageIndex < 0) currentImageIndex = currentImages.length - 1;
@@ -74,6 +80,7 @@ function updateImage() {
 
     isImageLoading = true;
     const img = document.getElementById('overlayImage');
+    const video = document.getElementById('overlayVideo');
     const spinner = document.getElementById('spinnerContainer');
     const newSrc = currentImages[currentImageIndex];
 
@@ -84,47 +91,57 @@ function updateImage() {
     document.getElementById('prevBtn').disabled = true;
     document.getElementById('nextBtn').disabled = true;
 
-    // Show spinner and hide current image immediately
+    video.pause();
+
     img.classList.add('loading');
+    video.classList.add('loading');
     spinner.classList.add('active');
 
-    // Small delay to ensure spinner is visible on mobile
     setTimeout(() => {
-        // Check if image is preloaded and ready
-        if (preloadedImages[newSrc] && preloadedImages[newSrc].complete && preloadedImages[newSrc].naturalWidth > 0) {
-            // Use preloaded image
-            img.src = preloadedImages[newSrc].src;
-            finishImageLoad();
+        if (isVideo(newSrc)) {
+            img.style.display = 'none';
+            video.style.display = '';
+            video.src = newSrc;
+            video.load();
+            video.oncanplay = () => finishImageLoad();
+            video.onerror = () => {
+                console.error('Failed to load video:', newSrc);
+                finishImageLoad();
+            };
         } else {
-            // Load image fresh
-            const tempImg = new Image();
+            video.style.display = 'none';
+            img.style.display = '';
 
-            tempImg.onload = () => {
-                img.src = tempImg.src;
-                preloadedImages[newSrc] = tempImg;
+            if (preloadedImages[newSrc] && preloadedImages[newSrc].complete && preloadedImages[newSrc].naturalWidth > 0) {
+                img.src = preloadedImages[newSrc].src;
                 finishImageLoad();
-            };
-
-            tempImg.onerror = () => {
-                console.error('Failed to load image:', newSrc);
-                finishImageLoad();
-            };
-
-            tempImg.src = newSrc;
+            } else {
+                const tempImg = new Image();
+                tempImg.onload = () => {
+                    img.src = tempImg.src;
+                    preloadedImages[newSrc] = tempImg;
+                    finishImageLoad();
+                };
+                tempImg.onerror = () => {
+                    console.error('Failed to load image:', newSrc);
+                    finishImageLoad();
+                };
+                tempImg.src = newSrc;
+            }
         }
-    }, 50); // Small delay ensures spinner renders on mobile
+    }, 50);
 }
 
 function finishImageLoad() {
     const img = document.getElementById('overlayImage');
+    const video = document.getElementById('overlayVideo');
     const spinner = document.getElementById('spinnerContainer');
 
-    // Use requestAnimationFrame for smooth transition
     requestAnimationFrame(() => {
         spinner.classList.remove('active');
         img.classList.remove('loading');
+        video.classList.remove('loading');
 
-        // Enable navigation buttons
         document.getElementById('prevBtn').disabled = false;
         document.getElementById('nextBtn').disabled = false;
 
